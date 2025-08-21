@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "pratica02fefe",
   "version": "1.0.4",
+=======
+  "name": "pratica02felipe",
+  "version": "1.0.1",
+>>>>>>> feature
   "description": "",
   "main": "index.js",
   "scripts": {
