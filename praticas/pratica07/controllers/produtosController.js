@@ -1,0 +1,90 @@
+const mongoose = require("mongoose");
+const Produto = require("../models/produtosModel.js");
+
+async function criar(req, res) {
+  try {
+    const { nome, preco } = req.body;
+    const novoProduto = await Produto.create({ nome, preco });
+    return res.status(201).json(novoProduto);
+  } catch (erro) {
+    return res.status(422).json({ msg: "Nome e preço do produto são obrigatórios" });
+  }
+}
+
+async function listar(req, res) {
+  const produtosCadastrados = await Produto.find({});
+  return res.status(200).json(produtosCadastrados);
+}
+
+async function buscar(req, res, next) {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "Parâmetro inválido" });
+  }
+
+  const produtoEncontrado = await Produto.findOne({ _id: id });
+
+  if (produtoEncontrado) {
+    req.produto = produtoEncontrado;
+    return next();
+  } else {
+    return res.status(404).json({ msg: "Produto não encontrado" });
+  }
+}
+
+function exibir(req, res) {
+  return res.status(200).json(req.produto);
+}
+
+async function atualizar(req, res) {
+  const { id } = req.params;
+  const { nome, preco } = req.body;
+
+  if (nome === undefined || preco === undefined) {
+    return res.status(422).json({ msg: "Nome e preço do produto são obrigatórios" });
+  }
+
+  if (nome === null || nome.trim() === "") {
+    return res.status(422).json({ msg: "Nome e preço do produto são obrigatórios" });
+  }
+
+  if (nome.trim().length < 3) {
+    return res.status(422).json({ msg: "Nome deve ter pelo menos 3 caracteres" });
+  }
+
+  try {
+    const produtoAtualizado = await Produto.findOneAndUpdate(
+      { _id: id },
+      { nome, preco },
+      { runValidators: true, new: true }
+    );
+
+    if (!produtoAtualizado) {
+      return res.status(404).json({ msg: "Produto não encontrado" });
+    }
+
+    return res.status(200).json(produtoAtualizado);
+  } catch (erro) {
+    return res.status(422).json({ msg: "Nome e preço do produto são obrigatórios" });
+  }
+}
+
+
+
+  
+
+async function remover(req, res) {
+  const { id } = req.params;
+  await Produto.findOneAndDelete({ _id: id });
+  return res.status(204).send();
+}
+
+module.exports = {
+  criar,
+  listar,
+  buscar,
+  exibir,
+  atualizar,
+  remover
+};
