@@ -91,7 +91,7 @@ describe('Teste do recurso /tarefas', () => {
     });
 
 
-    test('DELETE /id deve retorna 204', async() => {
+    test('DELETE produtos/id deve retorna 204', async() => {
         const response = await request.delete(`${url}/${id}`);
         expect(response.status).toBe(204)
     });
