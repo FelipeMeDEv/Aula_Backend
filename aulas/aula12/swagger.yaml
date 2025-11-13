@@ -11,35 +11,60 @@ tags:
 paths:
   /tarefas:
     get:
+      summary: Lista as tarefas 
+      tags:
+        - tarefas
       responses:
         200:
+          description: Operação com sucesso
           content:
             application/json:
               schema:
                 type: array
+                items:
+                  $ref: '#/components/schemas/Tarefa'
         500:
-          content: 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
     post:
+      summary: Cria uma tarefa
+      tags:
+        - tarefas
       requestBody:
         content:
           application/json:
             schema:
               type: object
+              properties:
+                nome:
+                  type: string
+                  example: Estudar Swagger
       responses:
         201:
+          description: Tarefa criada com sucesso
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Tarefa'
         422:
+          description: Erro de validação
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Erro'
         500:
+          description: Erro inesperado
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Erro'
   /tarefas/id:
     get:
+      summary: Obter uma tarefa pelo ID
+      tags:
+        - tarefas
       parameters:
         - in: path
           name: tarefaId
@@ -48,58 +73,78 @@ paths:
           required: true
       responses:
         200:
+          description: Tarefa encontrada
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schema/Tarefa'
         400:
+          description: ID inválido
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schema/Erro'
         404:
+          description: Tarefa não encontrada
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schema/Erro'
         500:
+          description: Erro inesperado
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Erro'
     put:
+      summary: Atualizar uma tarefa existente
+      tags:
+        - tarefas
       parameters:
         - in: path
           name: tarefaId
           schema:
-            type: string
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
+            type: object
+          properties:
+            nome:
+              type: string
+            concluida:
+              type: boolean
       responses:
         200:
+          description: Tarefa Atualizada com sucesso
           content:
             application/json:
               schema:
                 type: object
         400:
+          description: ID inválido
           content:
             application/json:
               schema:
                 type: object
         404:
+          description: Tarefa não encontrada
           content:
             application/json:
               schema:
                 type: object
         422:
+          description: Erro de validação
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schema/Erro'
         500:
+          description: Erro de validação
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Erro'
     delete:
+      summary Apagar uma tarefa existente
+      tags:
+        - tarefas
       parameters:
         - in: path
           name: tarefaId
@@ -108,21 +153,41 @@ paths:
           required: true
       responses:
         204:
+          description: Tarefa Apagada com sucesso
           content:
-            application/json:
-              schema:
-                type: object
         400:
+          description: ID inválido
           content:
             application/json:
               schema:
                 type: object
         404:
+          description: Tarefa não encontrada
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schema/Erro'
         500:
+          description: Erro inesperado
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Erro'
 
 components:
+  schemas:
+    Tarefa:
+      type: object
+      properties:
+        id:
+          type: string
+        nome: 
+          type: string
+        concluida:
+          type: boolean
+    Erro:
+      type: object
+      properties:
+        msg:
+          type: string
+        
