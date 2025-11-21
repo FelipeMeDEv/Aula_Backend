@@ -1,6 +1,14 @@
 var express = require("express");
 const { gerarToken, verificarToken } = require("../middlewares/auth");
-var router = express.Router();
+const router = express.Router();
+const Usuario = require("../models/userModel")
+
+
+router.post("/", async (req, res) => {
+  const {username, password} = req.body;
+  const novoUsuario = await Usuario.create({username, password});
+  res.status(201).json(novoUsuario)
+})
 
 /* GET users listing. */
 router.post("/login", function (req, res, next) {
